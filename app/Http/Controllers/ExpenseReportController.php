@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ExpenseReport;
 use App\Mail\from;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -18,8 +19,9 @@ class ExpenseReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
         return view('expenseReport.index',[
             'expenseReports'=> ExpenseReport::all()
         ]);
@@ -43,12 +45,13 @@ class ExpenseReportController extends Controller
      */
     public function store(Request $request)
     {
-        $validData = $request->validate([
+        /*$validData = $request->validate([
             'title' => 'required|min:3'
-        ]);
+        ]);*/
 
         $report = new ExpenseReport();
-        $report->title = $validData['title'];
+        $report->title = $request->get('title');
+        $report->user_id = $request->user->id;
         $report->save();
 
         return redirect('/expense_reports');
